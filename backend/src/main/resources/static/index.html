@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador de Impressora</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="layout">
+    <aside class="sidebar">
+        <h2>PrintOS</h2>
+        <p>Gerenciador de Impressão</p>
+
+        <div class="menu-item active">Simulação</div>
+        <div class="menu-item">Fila SJF</div>
+        <div class="menu-item">Múltiplas Filas</div>
+        <div class="menu-item">Resultados</div>
+    </aside>
+
+    <main class="content">
+        <section class="hero">
+            <div>
+                <h1>Simulador de Impressora</h1>
+                <p>
+                    Sistema que simula o escalonamento de documentos em uma fila de impressão.
+                    Primeiro executa SJF não-preemptivo e depois Múltiplas Filas preemptivo.
+                </p>
+            </div>
+
+            <button onclick="executarSimulacao()">Executar Simulação</button>
+        </section>
+
+        <section class="cards">
+            <div class="card">
+                <h2>Fila 1 - SJF</h2>
+                <p>Documentos impressos pelo menor tempo de impressão.</p>
+
+                <div class="cabecalho-inputs tres-colunas">
+                    <span>Documento</span>
+                    <span>Chegada</span>
+                    <span>CPU</span>
+                </div>
+
+                <div id="filaSJF"></div>
+            </div>
+
+            <div class="card">
+                <h2>Fila 2 - Múltiplas Filas</h2>
+                <p>
+                    Documentos separados em filas: urgente, normal e lote.
+                    Filas mais importantes podem interromper filas menores.
+                </p>
+
+                <div class="cabecalho-inputs quatro-colunas">
+                    <span>Documento</span>
+                    <span>Chegada</span>
+                    <span>CPU</span>
+                    <span>Fila</span>
+                </div>
+
+                <div id="filaMultiplas"></div>
+            </div>
+        </section>
+
+        <section class="resultado">
+            <h2>Resultado da Simulação</h2>
+            <div id="resultado">
+                <p class="mensagem-inicial">
+                    Clique em "Executar Simulação" para visualizar os resultados.
+                </p>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
