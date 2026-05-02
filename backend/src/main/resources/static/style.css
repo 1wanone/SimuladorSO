@@ -17,18 +17,20 @@ body {
 
 .sidebar {
     width: 260px;
-    background: #111827;
+    background: #2563eb;
     color: white;
     padding: 28px;
+    text-align: center;
 }
 
 .sidebar h2 {
     font-size: 28px;
     margin-bottom: 6px;
+    text-align: center;
 }
 
 .sidebar p {
-    color: #aeb7c5;
+    color: #e0f2fe;
     margin-bottom: 32px;
 }
 

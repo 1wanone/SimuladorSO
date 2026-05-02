@@ -1,4 +1,4 @@
-package src.main.simulador.model;
+package simulador.model;
 
 public class Processo {
 

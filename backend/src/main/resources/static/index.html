@@ -11,8 +11,6 @@
     <aside class="sidebar">
         <h2>PrintOS</h2>
         <p>Gerenciador de Impressão</p>
-
-        <div class="menu-item active">Simulação</div>
     </aside>
 
     <main class="content">
@@ -26,6 +24,17 @@
             </div>
 
             <button onclick="executarSimulacao()">Executar Simulação</button>
+        </section>
+
+        <section class="configuracao">
+            <h2>Configuração da CPU</h2>
+            <p>
+                O tempo de ciclo define de quanto em quanto tempo o escalonador verifica
+                se deve manter ou trocar o processo em execução.
+            </p>
+
+            <label for="tempoCicloCpu">Tempo de Ciclo de CPU</label>
+            <input id="tempoCicloCpu" type="number" value="1" min="1">
         </section>
 
         <section class="cards">

@@ -86,41 +86,87 @@ function lerProcessosMultiplas(containerId, quantidade) {
 }
 
 async function executarSimulacao() {
-    const filaSJF = lerProcessosSJF("filaSJF", 5);
-    const filaMultiplas = lerProcessosMultiplas("filaMultiplas", 5);
+    try {
+        const filaSJF = lerProcessosSJF("filaSJF", 5);
+        const filaMultiplas = lerProcessosMultiplas("filaMultiplas", 5);
+        const tempoCicloCpu = Number(document.getElementById("tempoCicloCpu").value);
 
-    const respostaSJF = await fetch("/api/impressora/sjf", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(filaSJF)
-    });
+        if (tempoCicloCpu <= 0) {
+            alert("O tempo de ciclo de CPU deve ser maior que zero.");
+            return;
+        }
 
-    const resultadoSJF = await respostaSJF.json();
+        const respostaSJF = await fetch("/api/impressora/sjf", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                processos: filaSJF,
+                tempoCicloCpu: tempoCicloCpu
+            })
+        });
 
-    const respostaMultiplas = await fetch("/api/impressora/multiplas-filas", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            processos: filaMultiplas,
-            tempoInicial: resultadoSJF.tempoFinal
-        })
-    });
+        if (!respostaSJF.ok) {
+            throw new Error("Erro ao executar o SJF no back-end.");
+        }
 
-    const resultadoMultiplas = await respostaMultiplas.json();
+        const resultadoSJF = await respostaSJF.json();
 
-    mostrarResultado(resultadoSJF, resultadoMultiplas);
+        const respostaMultiplas = await fetch("/api/impressora/multiplas-filas", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                processos: filaMultiplas,
+                tempoInicial: resultadoSJF.tempoFinal,
+                tempoCicloCpu: tempoCicloCpu
+            })
+        });
+
+        if (!respostaMultiplas.ok) {
+            throw new Error("Erro ao executar Múltiplas Filas no back-end.");
+        }
+
+        const resultadoMultiplas = await respostaMultiplas.json();
+
+        mostrarResultado(resultadoSJF, resultadoMultiplas);
+
+    } catch (erro) {
+        console.error(erro);
+        alert("Erro ao executar a simulação. Verifique se o back-end está rodando e se os endpoints estão corretos.");
+    }
 }
 
 function mostrarResultado(sjf, multiplas) {
     const div = document.getElementById("resultado");
 
     div.innerHTML = `
+        ${criarResumoGeral(sjf, multiplas)}
         ${criarBlocoResultado(sjf)}
         ${criarBlocoResultado(multiplas)}
+    `;
+}
+
+function criarResumoGeral(sjf, multiplas) {
+    return `
+        <div class="resumo-geral">
+            <div>
+                <strong>Tempo de Ciclo de CPU</strong>
+                <span>${sjf.tempoCicloCpu}</span>
+            </div>
+
+            <div>
+                <strong>Fim do SJF</strong>
+                <span>${sjf.tempoFinal}</span>
+            </div>
+
+            <div>
+                <strong>Fim da Simulação</strong>
+                <span>${multiplas.tempoFinal}</span>
+            </div>
+        </div>
     `;
 }
 
@@ -128,6 +174,11 @@ function criarBlocoResultado(resultado) {
     return `
         <div class="bloco-resultado">
             <h3>${resultado.algoritmo}</h3>
+
+            <p class="formula">
+                Tempo de espera = Tempo de vida - Tempo de CPU |
+                Tempo de vida = Tempo de conclusão - Tempo de chegada
+            </p>
 
             <h4>Linha do tempo</h4>
             <div class="linha-tempo">

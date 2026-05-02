@@ -1,4 +1,4 @@
-package src.main.simulador.model;
+package simulador.model;
 
 import java.util.List;
 
@@ -8,16 +8,20 @@ public class ResultadoSimulacao {
     private List<String> linhaDoTempo;
     private List<ResultadoProcesso> resultados;
     private int tempoFinal;
+    private int tempoCicloCpu;
 
     public ResultadoSimulacao() {
     }
 
     public ResultadoSimulacao(String algoritmo, List<String> linhaDoTempo,
-                              List<ResultadoProcesso> resultados, int tempoFinal) {
+                              List<ResultadoProcesso> resultados,
+                              int tempoFinal,
+                              int tempoCicloCpu) {
         this.algoritmo = algoritmo;
         this.linhaDoTempo = linhaDoTempo;
         this.resultados = resultados;
         this.tempoFinal = tempoFinal;
+        this.tempoCicloCpu = tempoCicloCpu;
     }
 
     public String getAlgoritmo() {
@@ -36,6 +40,10 @@ public class ResultadoSimulacao {
         return tempoFinal;
     }
 
+    public int getTempoCicloCpu() {
+        return tempoCicloCpu;
+    }
+
     public void setAlgoritmo(String algoritmo) {
         this.algoritmo = algoritmo;
     }
@@ -50,5 +58,9 @@ public class ResultadoSimulacao {
 
     public void setTempoFinal(int tempoFinal) {
         this.tempoFinal = tempoFinal;
+    }
+
+    public void setTempoCicloCpu(int tempoCicloCpu) {
+        this.tempoCicloCpu = tempoCicloCpu;
     }
 }

@@ -1,9 +1,9 @@
-package src.main.simulador.service;
+package simulador.service;
 
-import  src.main.simulador.model.Processo;
-import  src.main.simulador.model.ResultadoProcesso;
-import  src.main.simulador.model.ResultadoSimulacao;
 import org.springframework.stereotype.Service;
+import simulador.model.Processo;
+import simulador.model.ResultadoProcesso;
+import simulador.model.ResultadoSimulacao;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class EscalonamentoService {
 
-    public ResultadoSimulacao executarSJF(List<Processo> processos) {
+    public ResultadoSimulacao executarSJF(List<Processo> processos, int tempoCicloCpu) {
         int tempoAtual = 0;
 
         List<Processo> pendentes = new ArrayList<>(processos);
@@ -71,11 +71,14 @@ public class EscalonamentoService {
                 "SJF Não-Preemptivo",
                 linhaDoTempo,
                 resultados,
-                tempoAtual
+                tempoAtual,
+                tempoCicloCpu
         );
     }
 
-    public ResultadoSimulacao executarMultiplasFilas(List<Processo> processos, int tempoInicial) {
+    public ResultadoSimulacao executarMultiplasFilas(List<Processo> processos,
+                                                     int tempoInicial,
+                                                     int tempoCicloCpu) {
         int tempoAtual = tempoInicial;
         int concluidos = 0;
 
@@ -100,15 +103,7 @@ public class EscalonamentoService {
             ProcessoInterno escolhido = escolherProcessoMultiplasFilas(lista, tempoAtual);
 
             if (escolhido == null) {
-                if (processoAnterior != null) {
-                    linhaDoTempo.add(
-                            processoAnterior.nome + " (" + processoAnterior.fila + ") executou de "
-                                    + inicioBloco + " até " + tempoAtual
-                    );
-                    processoAnterior = null;
-                }
-
-                tempoAtual++;
+                tempoAtual += tempoCicloCpu;
                 inicioBloco = tempoAtual;
                 continue;
             }
@@ -129,8 +124,10 @@ public class EscalonamentoService {
                 processoAnterior = escolhido;
             }
 
-            escolhido.tempoRestante--;
-            tempoAtual++;
+            int executado = Math.min(tempoCicloCpu, escolhido.tempoRestante);
+
+            escolhido.tempoRestante -= executado;
+            tempoAtual += executado;
 
             if (escolhido.tempoRestante == 0) {
                 escolhido.tempoConclusao = tempoAtual;
@@ -164,7 +161,8 @@ public class EscalonamentoService {
                 "Múltiplas Filas Preemptivo",
                 linhaDoTempo,
                 resultados,
-                tempoAtual
+                tempoAtual,
+                tempoCicloCpu
         );
     }
 
