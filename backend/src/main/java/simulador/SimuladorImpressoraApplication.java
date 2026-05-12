@@ -3,7 +3,6 @@ package simulador;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 //nj
-//mibjk
 
 @SpringBootApplication
 public class SimuladorImpressoraApplication {
