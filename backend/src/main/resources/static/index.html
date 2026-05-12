@@ -2,34 +2,75 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Simulador de Impressora</title>
+    <title>PrintOS - Simulador de Escalonamento</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="layout">
-    <main class="content">
+<div class="app">
 
-        <section class="hero">
+    <header class="topo">
+        <div>
+            <span class="rotulo">Sistemas Operacionais</span>
+            <h1>PrintOS</h1>
+            <p>
+                Simulador de escalonamento de processos aplicado a uma fila de impressão.
+            </p>
+        </div>
+
+        <button class="botao-principal" onclick="executarSimulacao()">
+            Executar simulação
+        </button>
+    </header>
+
+    <section class="fluxo">
+        <div class="passo ativo">
+            <span>1</span>
             <div>
-                <span class="tag">Sistemas Operacionais</span>
-                <h1>Gerenciador de Processos de Impressão</h1>
-                <p>
-                    Simulação de escalonamento de documentos em uma fila de impressão.
-                    A primeira etapa utiliza SJF não-preemptivo e a segunda etapa utiliza
-                    Múltiplas Filas preemptivo.
-                </p>
+                <strong>Entrada inicial</strong>
+                <p>Cadastro de 5 documentos/processos.</p>
             </div>
+        </div>
 
-            <button onclick="executarSimulacao()">Executar Simulação</button>
-        </section>
+        <div class="linha"></div>
 
-        <section class="configuracao">
+        <div class="passo">
+            <span>2</span>
             <div>
-                <h2>Configuração da CPU</h2>
+                <strong>SJF não-preemptivo</strong>
+                <p>Executa primeiro o menor tempo de CPU.</p>
+            </div>
+        </div>
+
+        <div class="linha"></div>
+
+        <div class="passo">
+            <span>3</span>
+            <div>
+                <strong>Múltiplas Filas</strong>
+                <p>Executa a segunda lista com prioridade por fila.</p>
+            </div>
+        </div>
+
+        <div class="linha"></div>
+
+        <div class="passo">
+            <span>4</span>
+            <div>
+                <strong>Resultados</strong>
+                <p>Mostra espera, vida e Diagrama de Gantt.</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="conteudo">
+
+        <section class="painel configuracao">
+            <div>
+                <h2>Configuração da simulação</h2>
                 <p>
-                    O tempo de ciclo define de quanto em quanto tempo o escalonador verifica
-                    se deve manter ou trocar o processo em execução.
+                    O tempo de ciclo de CPU define de quanto em quanto tempo o escalonador
+                    verifica se deve manter ou trocar o processo em execução.
                 </p>
             </div>
 
@@ -39,15 +80,20 @@
             </div>
         </section>
 
-        <section class="cards">
-            <div class="card">
-                <div class="card-header">
+        <section class="grades-processos">
+
+            <div class="painel">
+                <div class="cabecalho-painel">
                     <div>
-                        <h2>Fila 1 - SJF</h2>
-                        <p>Documentos impressos pelo menor tempo de impressão.</p>
+                        <span class="etapa">Etapa 1</span>
+                        <h2>Fila SJF</h2>
+                        <p>
+                            O SJF escolhe o documento com menor tempo de CPU entre os que já chegaram.
+                            Depois que começa, o processo não é interrompido.
+                        </p>
                     </div>
 
-                    <span class="badge">Não-preemptivo</span>
+                    <span class="selo selo-sjf">Não-preemptivo</span>
                 </div>
 
                 <div class="cabecalho-inputs tres-colunas">
@@ -59,17 +105,24 @@
                 <div id="filaSJF"></div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
+            <div class="painel">
+                <div class="cabecalho-painel">
                     <div>
-                        <h2>Fila 2 - Múltiplas Filas</h2>
+                        <span class="etapa">Etapa 2</span>
+                        <h2>Fila por Prioridade</h2>
                         <p>
-                            Documentos separados em filas urgente, normal e lote.
-                            As filas mais importantes têm preferência.
+                            Após o SJF terminar, a impressora muda para Múltiplas Filas.
+                            Processos urgentes têm preferência sobre normais e lote.
                         </p>
                     </div>
 
-                    <span class="badge">Preemptivo</span>
+                    <span class="selo selo-preemptivo">Preemptivo</span>
+                </div>
+
+                <div class="legenda-prioridade">
+                    <span><i class="cor-urgente"></i>Urgente</span>
+                    <span><i class="cor-normal"></i>Normal</span>
+                    <span><i class="cor-lote"></i>Lote</span>
                 </div>
 
                 <div class="cabecalho-inputs quatro-colunas">
@@ -81,19 +134,31 @@
 
                 <div id="filaMultiplas"></div>
             </div>
+
         </section>
 
-        <section class="resultado">
-            <h2>Resultado da Simulação</h2>
+        <section class="painel resultado">
+            <div class="cabecalho-resultado">
+                <div>
+                    <span class="etapa">Saída da simulação</span>
+                    <h2>Resultado</h2>
+                    <p>
+                        Aqui serão exibidos o resumo geral, o Diagrama de Gantt, a linha do tempo
+                        e a tabela de cada processo.
+                    </p>
+                </div>
+            </div>
 
             <div id="resultado">
-                <p class="mensagem-inicial">
-                    Clique em "Executar Simulação" para visualizar os resultados.
-                </p>
+                <div class="estado-vazio">
+                    <strong>Nenhuma simulação executada ainda</strong>
+                    <p>Clique em “Executar simulação” para gerar os resultados.</p>
+                </div>
             </div>
         </section>
 
     </main>
+
 </div>
 
 <script src="script.js"></script>
