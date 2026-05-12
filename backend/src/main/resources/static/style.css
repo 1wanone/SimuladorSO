@@ -385,3 +385,107 @@ td {
         grid-template-columns: 1fr;
     }
 }
+
+/* DIAGRAMA DE GANTT */
+
+.gantt-container {
+    margin: 14px 0 22px;
+    padding: 16px;
+    background: #fffdf9;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.gantt-eixo {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.gantt-barra {
+    display: flex;
+    width: 100%;
+    min-height: 64px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f6f4ef;
+}
+
+.gantt-bloco {
+    min-width: 70px;
+    padding: 10px 8px;
+    border-right: 1px solid rgba(255, 255, 255, 0.55);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    text-align: center;
+    color: white;
+}
+
+.gantt-bloco span {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.gantt-bloco small {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.gantt-sjf {
+    background: #4f6f68;
+}
+
+.gantt-urgente {
+    background: #8a5a44;
+}
+
+.gantt-normal {
+    background: #5f7f73;
+}
+
+.gantt-lote {
+    background: #7b6f55;
+}
+
+.gantt-legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.gantt-legenda span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.gantt-legenda i {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.legenda-sjf {
+    background: #4f6f68;
+}
+
+.legenda-urgente {
+    background: #8a5a44;
+}
+
+.legenda-normal {
+    background: #5f7f73;
+}
+
+.legenda-lote {
+    background: #7b6f55;
+}

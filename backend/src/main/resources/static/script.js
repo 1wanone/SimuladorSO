@@ -180,6 +180,9 @@ function criarBlocoResultado(resultado) {
                 Tempo de vida = Tempo de conclusão - Tempo de chegada
             </p>
 
+            <h4>Diagrama de Gantt</h4>
+            ${criarDiagramaGantt(resultado)}
+
             <h4>Linha do tempo</h4>
             <div class="linha-tempo">
                 ${resultado.linhaDoTempo.map(item => `<span class="item-tempo">${item}</span>`).join("")}
@@ -221,6 +224,83 @@ function criarBlocoResultado(resultado) {
             </p>
         </div>
     `;
+}
+
+function criarDiagramaGantt(resultado) {
+    const blocos = resultado.linhaDoTempo
+        .map(item => extrairDadosLinhaTempo(item))
+        .filter(item => item !== null);
+
+    if (blocos.length === 0) {
+        return `<p class="mensagem-inicial">Não foi possível gerar o Diagrama de Gantt.</p>`;
+    }
+
+    const inicioMinimo = Math.min(...blocos.map(b => b.inicio));
+    const fimMaximo = Math.max(...blocos.map(b => b.fim));
+    const tempoTotal = fimMaximo - inicioMinimo;
+
+    return `
+        <div class="gantt-container">
+            <div class="gantt-eixo">
+                <span>Início: ${inicioMinimo}</span>
+                <span>Fim: ${fimMaximo}</span>
+            </div>
+
+            <div class="gantt-barra">
+                ${blocos.map(bloco => {
+        const largura = ((bloco.fim - bloco.inicio) / tempoTotal) * 100;
+        const classeFila = obterClasseFila(bloco.fila);
+
+        return `
+                        <div class="gantt-bloco ${classeFila}" style="width: ${largura}%;">
+                            <span>${bloco.nome}</span>
+                            <small>${bloco.inicio} - ${bloco.fim}</small>
+                        </div>
+                    `;
+    }).join("")}
+            </div>
+
+            <div class="gantt-legenda">
+                <span><i class="legenda-sjf"></i>SJF</span>
+                <span><i class="legenda-urgente"></i>Urgente</span>
+                <span><i class="legenda-normal"></i>Normal</span>
+                <span><i class="legenda-lote"></i>Lote</span>
+            </div>
+        </div>
+    `;
+}
+
+function extrairDadosLinhaTempo(texto) {
+    const regex = /^(.*?)\s*(?:\((.*?)\))?\s*executou de\s*(\d+)\s*até\s*(\d+)/;
+    const partes = texto.match(regex);
+
+    if (!partes) {
+        return null;
+    }
+
+    return {
+        nome: partes[1].trim(),
+        fila: partes[2] ? partes[2].trim().toLowerCase() : "sjf",
+        inicio: Number(partes[3]),
+        fim: Number(partes[4])
+    };
+}
+
+function obterClasseFila(fila) {
+    if (!fila) {
+        return "gantt-sjf";
+    }
+
+    switch (fila.toLowerCase()) {
+        case "urgente":
+            return "gantt-urgente";
+        case "normal":
+            return "gantt-normal";
+        case "lote":
+            return "gantt-lote";
+        default:
+            return "gantt-sjf";
+    }
 }
 
 criarInputsSJF("filaSJF", processosSJF);
