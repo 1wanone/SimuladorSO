@@ -9,12 +9,15 @@
 
 <div class="layout">
     <main class="content">
+
         <section class="hero">
             <div>
-                <h1>Simulador de Impressora</h1>
+                <span class="tag">Sistemas Operacionais</span>
+                <h1>Gerenciador de Processos de Impressão</h1>
                 <p>
-                    Sistema que simula o escalonamento de documentos em uma fila de impressão.
-                    Primeiro executa SJF não-preemptivo e depois Múltiplas Filas preemptivo.
+                    Simulação de escalonamento de documentos em uma fila de impressão.
+                    A primeira etapa utiliza SJF não-preemptivo e a segunda etapa utiliza
+                    Múltiplas Filas preemptivo.
                 </p>
             </div>
 
@@ -22,20 +25,30 @@
         </section>
 
         <section class="configuracao">
-            <h2>Configuração da CPU</h2>
-            <p>
-                O tempo de ciclo define de quanto em quanto tempo o escalonador verifica
-                se deve manter ou trocar o processo em execução.
-            </p>
+            <div>
+                <h2>Configuração da CPU</h2>
+                <p>
+                    O tempo de ciclo define de quanto em quanto tempo o escalonador verifica
+                    se deve manter ou trocar o processo em execução.
+                </p>
+            </div>
 
-            <label for="tempoCicloCpu">Tempo de Ciclo de CPU</label>
-            <input id="tempoCicloCpu" type="number" value="1" min="1">
+            <div class="campo-ciclo">
+                <label for="tempoCicloCpu">Tempo de Ciclo de CPU</label>
+                <input id="tempoCicloCpu" type="number" value="1" min="1">
+            </div>
         </section>
 
         <section class="cards">
             <div class="card">
-                <h2>Fila 1 - SJF</h2>
-                <p>Documentos impressos pelo menor tempo de impressão.</p>
+                <div class="card-header">
+                    <div>
+                        <h2>Fila 1 - SJF</h2>
+                        <p>Documentos impressos pelo menor tempo de impressão.</p>
+                    </div>
+
+                    <span class="badge">Não-preemptivo</span>
+                </div>
 
                 <div class="cabecalho-inputs tres-colunas">
                     <span>Documento</span>
@@ -47,11 +60,17 @@
             </div>
 
             <div class="card">
-                <h2>Fila 2 - Múltiplas Filas</h2>
-                <p>
-                    Documentos separados em filas: urgente, normal e lote.
-                    Filas mais importantes podem interromper filas menores.
-                </p>
+                <div class="card-header">
+                    <div>
+                        <h2>Fila 2 - Múltiplas Filas</h2>
+                        <p>
+                            Documentos separados em filas urgente, normal e lote.
+                            As filas mais importantes têm preferência.
+                        </p>
+                    </div>
+
+                    <span class="badge">Preemptivo</span>
+                </div>
 
                 <div class="cabecalho-inputs quatro-colunas">
                     <span>Documento</span>
@@ -66,12 +85,14 @@
 
         <section class="resultado">
             <h2>Resultado da Simulação</h2>
+
             <div id="resultado">
                 <p class="mensagem-inicial">
                     Clique em "Executar Simulação" para visualizar os resultados.
                 </p>
             </div>
         </section>
+
     </main>
 </div>
 
