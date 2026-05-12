@@ -2,163 +2,98 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>PrintOS - Simulador de Escalonamento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Impressora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="app">
 
-    <header class="topo">
-        <div>
-            <span class="rotulo">Sistemas Operacionais</span>
-            <h1>PrintOS</h1>
-            <p>
-                Simulador de escalonamento de processos aplicado a uma fila de impressão.
-            </p>
+    <header class="topbar">
+        <div class="topbar-left">
+            <div class="app-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            </div>
+            <span class="app-name">Simulador de Impressora</span>
+            <span class="app-sep">/</span>
+            <span class="app-sub">Escalonamento de Processos</span>
         </div>
-
-        <button class="botao-principal" onclick="executarSimulacao()">
-            Executar simulação
-        </button>
+        <span class="tag-so">Sistemas Operacionais</span>
     </header>
 
-    <section class="fluxo">
-        <div class="passo ativo">
-            <span>1</span>
-            <div>
-                <strong>Entrada inicial</strong>
-                <p>Cadastro de 5 documentos/processos.</p>
-            </div>
-        </div>
+    <div class="workspace">
 
-        <div class="linha"></div>
+        <aside class="sidebar">
 
-        <div class="passo">
-            <span>2</span>
-            <div>
-                <strong>SJF não-preemptivo</strong>
-                <p>Executa primeiro o menor tempo de CPU.</p>
-            </div>
-        </div>
-
-        <div class="linha"></div>
-
-        <div class="passo">
-            <span>3</span>
-            <div>
-                <strong>Múltiplas Filas</strong>
-                <p>Executa a segunda lista com prioridade por fila.</p>
-            </div>
-        </div>
-
-        <div class="linha"></div>
-
-        <div class="passo">
-            <span>4</span>
-            <div>
-                <strong>Resultados</strong>
-                <p>Mostra espera, vida e Diagrama de Gantt.</p>
-            </div>
-        </div>
-    </section>
-
-    <main class="conteudo">
-
-        <section class="painel configuracao">
-            <div>
-                <h2>Configuração da simulação</h2>
-                <p>
-                    O tempo de ciclo de CPU define de quanto em quanto tempo o escalonador
-                    verifica se deve manter ou trocar o processo em execução.
-                </p>
-            </div>
-
-            <div class="campo-ciclo">
-                <label for="tempoCicloCpu">Tempo de Ciclo de CPU</label>
-                <input id="tempoCicloCpu" type="number" value="1" min="1">
-            </div>
-        </section>
-
-        <section class="grades-processos">
-
-            <div class="painel">
-                <div class="cabecalho-painel">
-                    <div>
-                        <span class="etapa">Etapa 1</span>
-                        <h2>Fila SJF</h2>
-                        <p>
-                            O SJF escolhe o documento com menor tempo de CPU entre os que já chegaram.
-                            Depois que começa, o processo não é interrompido.
-                        </p>
+            <div class="sidebar-section">
+                <div class="section-label">Configuração Global</div>
+                <div class="field-group">
+                    <label class="field-label" for="tempoCicloCpu">Ciclo de CPU</label>
+                    <div class="input-suffix">
+                        <input id="tempoCicloCpu" type="number" value="1" min="1">
+                        <span class="suffix-text">ms</span>
                     </div>
-
-                    <span class="selo selo-sjf">Não-preemptivo</span>
                 </div>
+            </div>
 
-                <div class="cabecalho-inputs tres-colunas">
-                    <span>Documento</span>
-                    <span>Chegada</span>
-                    <span>CPU</span>
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section">
+                <div class="section-label">
+                    Fila 1 — SJF
+                    <span class="badge-inline blue">Não-preemptivo</span>
                 </div>
-
+                <p class="section-desc">Menor burst time executa primeiro.</p>
+                <div class="col-header tres-col">
+                    <span>Doc</span><span>Chegada</span><span>CPU</span>
+                </div>
                 <div id="filaSJF"></div>
             </div>
 
-            <div class="painel">
-                <div class="cabecalho-painel">
-                    <div>
-                        <span class="etapa">Etapa 2</span>
-                        <h2>Fila por Prioridade</h2>
-                        <p>
-                            Após o SJF terminar, a impressora muda para Múltiplas Filas.
-                            Processos urgentes têm preferência sobre normais e lote.
-                        </p>
-                    </div>
+            <div class="sidebar-divider"></div>
 
-                    <span class="selo selo-preemptivo">Preemptivo</span>
+            <div class="sidebar-section">
+                <div class="section-label">
+                    Fila 2 — Múltiplas Filas
+                    <span class="badge-inline amber">Preemptivo</span>
                 </div>
-
-                <div class="legenda-prioridade">
-                    <span><i class="cor-urgente"></i>Urgente</span>
-                    <span><i class="cor-normal"></i>Normal</span>
-                    <span><i class="cor-lote"></i>Lote</span>
+                <p class="section-desc">Urgente › Normal › Lote.</p>
+                <div class="col-header quatro-col">
+                    <span>Doc</span><span>Chegada</span><span>CPU</span><span>Fila</span>
                 </div>
-
-                <div class="cabecalho-inputs quatro-colunas">
-                    <span>Documento</span>
-                    <span>Chegada</span>
-                    <span>CPU</span>
-                    <span>Fila</span>
-                </div>
-
                 <div id="filaMultiplas"></div>
             </div>
 
-        </section>
-
-        <section class="painel resultado">
-            <div class="cabecalho-resultado">
-                <div>
-                    <span class="etapa">Saída da simulação</span>
-                    <h2>Resultado</h2>
-                    <p>
-                        Aqui serão exibidos o resumo geral, o Diagrama de Gantt, a linha do tempo
-                        e a tabela de cada processo.
-                    </p>
-                </div>
+            <div class="sidebar-footer">
+                <button class="btn-run" onclick="executarSimulacao()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Executar Simulação
+                </button>
             </div>
 
-            <div id="resultado">
-                <div class="estado-vazio">
-                    <strong>Nenhuma simulação executada ainda</strong>
-                    <p>Clique em “Executar simulação” para gerar os resultados.</p>
-                </div>
+        </aside>
+
+        <main class="panel">
+
+            <div id="estado-vazio" class="estado-vazio">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <p>Configure os processos e clique em <strong>Executar Simulação</strong></p>
             </div>
-        </section>
 
-    </main>
+            <div id="resultado-wrapper" style="display:none;">
+                <div class="panel-topbar">
+                    <span class="panel-title">Resultado</span>
+                    <div id="resumo-chips" class="resumo-row"></div>
+                </div>
+                <div id="resultado" class="resultado-inner"></div>
+            </div>
 
+        </main>
+    </div>
 </div>
 
 <script src="script.js"></script>
